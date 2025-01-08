@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import { useState, useEffect } from 'react';
+import AppCard from './components/AppCard';
 import axios from 'axios'
 const apiUrl = "http://localhost:3000" 
 
@@ -44,8 +45,9 @@ function App() {
     // }
   };
 
-  const handleDelete = (index) => {
-    const updatedArticles = articles.filter((_, i) => i !== index);
+  const handleDelete = (postId) => {
+    const updatedArticles = articles.filter(post => post.id !== postId);
+    axios.delete(`${apiUrl}/posts/${postId}`).then((Response) => {})
     setArticles(updatedArticles);
   };
 
@@ -98,15 +100,7 @@ function App() {
 
       <div className="mt-4">
         {Array.isArray(articles) && articles.map((article, index) => (
-          <div key={index} className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">{article.title}</h5>
-              {article.image && <img src={`${apiUrl}/${article.image}`} alt="Immagine articolo" className="card-img-top mb-3" />}
-              <p className="card-text">{article.content}</p>
-              <button className="btn btn-danger" onClick={() => handleDelete(index)}>Cancella</button>
-            </div>
-          </div>
-        ))}
+          <AppCard key={index} article={article} index={index} apiUrl={apiUrl} handleDelete={handleDelete}/>))}
       </div>
     </div>
   );
