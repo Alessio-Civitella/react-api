@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import axios from 'axios'
 const apiUrl = "http://localhost:3000" 
 
+const newPost = {
+  title: '',
+  image: '',
+  content: '',
+};
+
 function App() {
-  const [formData, setFormData] = useState({
-    title: '',
-    image: '',
-    content: '',
-  });
+  const [formData, setFormData] = useState(newPost);
   const [articles, setArticles] = useState([]);
 
   const getPost = () => {
@@ -34,14 +36,12 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (formData.title && formData.content) {
-      setArticles([...articles, formData]);
-      setFormData({
-        title: '',
-        image: '',
-        content: '',
-      });
-    }
+    // if (formData.title && formData.content) {
+      axios.post(`${apiUrl}/posts`, formData).then((Response) => {
+        setArticles([...articles, formData]);
+        setFormData(newPost);
+      })
+    // }
   };
 
   const handleDelete = (index) => {
